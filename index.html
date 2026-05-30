@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jest Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Шапка сайта (Навигация) -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">Jest Studio</div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#products">Товар</a></li>
+                    <li><a href="#about">Описание</a></li>
+                    <li><a href="#support">Техподдержка</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Главный баннер -->
+    <section class="hero">
+        <div class="container">
+            <h1>Добро пожаловать в Jest Studio</h1>
+            <p>Качественные цифровые товары и профессиональная поддержка</p>
+        </div>
+    </section>
+
+    <!-- Раздел 1: Товар -->
+    <section id="products" class="section-padding">
+        <div class="container">
+            <h2 class="section-title">Наши Товары</h2>
+            <div class="products-grid">
+                <!-- Карточка товара 1 -->
+                <div class="product-card">
+                    <div class="product-icon">📦</div>
+                    <h3>Премиум Пакет</h3>
+                    <p class="price">990 ₽</p>
+                    <p>Идеальное решение для быстрого старта и базовой настройки вашего проекта.</p>
+                    <button class="btn">Купить</button>
+                </div>
+                <!-- Карточка товара 2 -->
+                <div class="product-card featured">
+                    <div class="product-icon">🚀</div>
+                    <h3>Ультра Студио</h3>
+                    <p class="price">1 990 ₽</p>
+                    <p>Максимальный набор инструментов, приоритетный доступ и эксклюзивный контент.</p>
+                    <button class="btn">Купить</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел 2: Описание -->
+    <section id="about" class="section-padding alt-bg">
+        <div class="container">
+            <h2 class="section-title">Описание Студии</h2>
+            <div class="about-content">
+                <p><strong>Jest Studio</strong> — это современная платформа, специализирующаяся на разработке и предоставлении высококачественных цифровых продуктов, игровых решений и элементов кастомизации.</p>
+                <p>Мы создаем инструменты, которые помогают контент-мейкерам, геймерам и разработчикам выводить свои проекты на новый уровень. Наша цель — объединить эстетичный визуал, функциональность и доступность в каждом продукте.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел 3: Техподдержка -->
+    <section id="support" class="section-padding">
+        <div class="container">
+            <h2 class="section-title">Техподдержка</h2>
+            <div class="support-container">
+                <div class="support-info">
+                    <h3>Возникли вопросы или проблемы?</h3>
+                    <p>Наша команда специалистов готова помочь вам в любое время суток. Напишите нам, и мы решим любой технический нюанс.</p>
+                    <p><strong>Email:</strong> support@jeststudio.com</p>
+                    <p><strong>График работы:</strong> 24/7 без выходных</p>
+                </div>
+                <!-- Форма обратной связи -->
+                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение отправлено!');">
+                    <input type="text" placeholder="Ваше имя" required>
+                    <input type="email" placeholder="Ваш Email" required>
+                    <textarea placeholder="Опишите вашу проблему или вопрос..." rows="5" required></textarea>
+                    <button type="submit" class="btn">Отправить запрос</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Подвал сайта -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Jest Studio. Все права защищены.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -5,13 +5,100 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jest Studio</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Стили для новых функций (Приветствие, Чат-ИИ и Промокоды) */
+        :root {
+            --accent-glow: rgba(157, 78, 221, 0.6);
+        }
+
+        /* 1. Модальное окно приветствия */
+        .welcome-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 12, 27, 0.95); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 1; transition: opacity 0.5s ease;
+        }
+        .welcome-card {
+            background: #18142c; border: 2px solid var(--accent-color, #7b2cbf);
+            border-radius: 16px; padding: 40px; max-width: 500px; width: 90%;
+            text-align: center; box-shadow: 0 0 40px var(--accent-glow);
+            transform: scale(1); transition: transform 0.5s ease;
+        }
+        .welcome-card h2 {
+            font-size: 28px; margin-bottom: 15px;
+            background: linear-gradient(45deg, #ea80fc, #ff6b6b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        /* 2. Живой ИИ-Чат Техподдержки */
+        .ai-chat-widget {
+            position: fixed; bottom: 20px; right: 20px; z-index: 5000;
+            font-family: sans-serif;
+        }
+        .chat-toggle-btn {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: linear-gradient(45deg, #7b2cbf, #9d4edd);
+            border: none; color: white; font-size: 26px; cursor: pointer;
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transition: transform 0.3s ease;
+        }
+        .chat-toggle-btn:hover { transform: scale(1.1); }
+        
+        .chat-window {
+            position: absolute; bottom: 75px; right: 0;
+            width: 350px; height: 450px; background: #18142c;
+            border: 2px solid #7b2cbf; border-radius: 12px;
+            display: none; flex-direction: column; overflow: hidden;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+        }
+        .chat-header {
+            background: #7b2cbf; padding: 15px; color: white;
+            font-weight: bold; display: flex; justify-content: space-between; align-items: center;
+        }
+        .chat-messages {
+            flex: 1; padding: 15px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 10px;
+            background: #0f0c1b;
+        }
+        .msg { padding: 10px 14px; border-radius: 8px; max-width: 80%; font-size: 14px; line-height: 1.4; }
+        .msg.ai { background: #241e42; color: #f8f9fa; align-self: flex-start; border-left: 3px solid #9d4edd; }
+        .msg.user { background: #7b2cbf; color: white; align-self: flex-end; }
+        
+        .chat-footer { padding: 10px; display: flex; gap: 8px; background: #18142c; border-top: 1px solid rgba(255,255,255,0.05); }
+        .chat-input { flex: 1; background: #0f0c1b; border: 1px solid #7b2cbf; border-radius: 4px; padding: 8px; color: white; }
+        .chat-send-btn { background: #7b2cbf; border: none; color: white; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
+
+        /* Анимация пульсации логотипа */
+        .logo-animated {
+            font-weight: 800; letter-spacing: 2px;
+            background: linear-gradient(45deg, #9d4edd, #ff6b6b);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: logo-pulse 3s ease-in-out infinite alternate;
+        }
+        @keyframes logo-pulse {
+            0% { filter: drop-shadow(0 0 2px rgba(157, 78, 221, 0.4)); }
+            100% { filter: drop-shadow(0 0 15px rgba(157, 78, 221, 0.9)); }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Шапка сайта (Навигация) -->
+    <!-- ОКНО ПРИВЕТСТВИЯ ПРИ ВХОДЕ -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-card">
+            <h2>🚀 Глобальное Обновление!</h2>
+            <p style="color: #b3b3b3; line-height: 1.6; margin-bottom: 25px;">
+                Добро пожаловать в обновленную версию <strong>Jest Studio</strong>!<br>
+                Мы полностью переработали взаимодействие: добавили умного ИИ-ассистента в поддержку, внедрили систему автоматических промокодов и подключили прямые способы оплаты.
+            </p>
+            <button class="btn" onclick="closeWelcome()" style="width: 100%; padding: 12px;">Войти на сайт</button>
+        </div>
+    </div>
+
+    <!-- Шапка сайта -->
     <header>
         <div class="container header-container">
-            <div class="logo">Jest Studio</div>
+            <div class="logo logo-animated">JEST STUDIO</div>
             <nav>
                 <ul class="nav-links">
                     <li><a href="#products">Товары и Цены</a></li>
@@ -28,7 +115,7 @@
     <section class="hero">
         <div class="container">
             <h1>Добро пожаловать в Jest Studio</h1>
-            <p>Качественные цифровые товары и профессиональная поддержка</p>
+            <p>Качественные цифровые товары, умный ИИ-чат и моментальная оплата</p>
         </div>
     </section>
 
@@ -38,73 +125,105 @@
             <h2 class="section-title">Наши Товары и Цены</h2>
             <div class="products-grid" style="max-width: 1200px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
                 
-                <!-- Товар 1 -->
                 <div class="product-card">
                     <div class="product-icon">🖼️</div>
                     <h3>Аватарка</h3>
                     <p class="price">250 ₽</p>
                     <p>Стильная и сочная аватарка для твоего профиля, которая выделит тебя среди остальных.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Аватарка', 250)">Купить</button>
                 </div>
 
-                <!-- Товар 2 -->
                 <div class="product-card">
                     <div class="product-icon">📐</div>
                     <h3>Шапка</h3>
                     <p class="price">450 ₽</p>
                     <p>Профессиональный баннер для оформления твоего YouTube, Twitch или Telegram канала.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Шапка', 450)">Купить</button>
                 </div>
 
-                <!-- Товар 3 -->
                 <div class="product-card">
                     <div class="product-icon">🎬</div>
                     <h3>Превью</h3>
                     <p class="price">350 ₽</p>
                     <p>Кликабельная обложка для видео, которая поднимет твои просмотры до максимума.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Превью', 350)">Купить</button>
                 </div>
 
-                <!-- Товар 4 -->
                 <div class="product-card">
                     <div class="product-icon">🖥️</div>
                     <h3>Оверлей</h3>
                     <p class="price">500 ₽</p>
                     <p>Красивое оформление стрима, делающее твою трансляцию эстетичной и приятной для зрителя.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Оверлей', 500)">Купить</button>
                 </div>
 
-                <!-- Товар 5 -->
                 <div class="product-card featured">
                     <div class="product-icon">✨</div>
                     <h3>Анимированная Аватарка</h3>
                     <p class="price">600 ₽</p>
                     <p>Живая GIF/видео аватарка с крутыми эффектами, приковывающая к себе все взгляды.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Анимированная Аватарка', 600)">Купить</button>
                 </div>
 
-                <!-- Товар 6 -->
                 <div class="product-card featured">
                     <div class="product-icon">🔥</div>
                     <h3>Анимированный Оверлей</h3>
                     <p class="price">1 200 ₽</p>
                     <p>Динамический оверлей высшего качества с плавной анимацией для профессиональных стримеров.</p>
-                    <button class="btn">Купить</button>
+                    <button class="btn" onclick="openOrderModal('Анимированный Оверлей', 1200)">Купить</button>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Раздел 2: Промокоды -->
+    <!-- МОДАЛЬНОЕ ОКНО ОФОРМЛЕНИЯ ЗАКАЗА И ОПЛАТЫ -->
+    <div id="paymentModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 12, 27, 0.9); z-index: 6000; align-items: center; justify-content: center;">
+        <div class="support-form" style="max-width: 450px; width: 90%; position: relative; border: 2px solid #7b2cbf; box-shadow: 0 0 30px var(--accent-glow);">
+            <span onclick="closeOrderModal()" style="position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 24px; color: var(--text-muted);">&times;</span>
+            
+            <h3 style="margin-bottom: 10px; font-size: 22px; text-align: center;">Оформление заказа</h3>
+            <p style="text-align: center; margin-bottom: 20px; color: #b3b3b3;">Товар: <span id="modalItemName" style="color: #fff; font-weight: bold;"></span> (<span id="modalItemPrice" style="color: #ea80fc; font-weight: bold;"></span>)</p>
+            
+            <!-- Интеграция с агрегатором Aaio/ЮKassa -->
+            <form action="https://aaio.io/merchant/pay" method="GET" target="_blank">
+                <input type="hidden" name="merchant_id" value="ID_ТВОЕГО_МАГАЗИНА">
+                <input type="hidden" id="formAmount" name="amount" value="">
+                <input type="hidden" id="formOrder" name="order_id" value="">
+                
+                <label style="font-size: 13px; color: #b3b3b3; display: block; margin-bottom: 5px;">Ваш Действующий Email:</label>
+                <input type="email" name="email" placeholder="client@mail.ru" required style="margin-bottom: 15px;">
+                
+                <label style="font-size: 13px; color: #b3b3b3; display: block; margin-bottom: 5px;">Ввести промокод:</label>
+                <input type="text" id="modalPromoInput" placeholder="START2026" style="margin-bottom: 15px;" oninput="applyModalPromo()">
+
+                <div style="background: #0f0c1b; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                    <p style="font-size: 13px; margin-bottom: 8px; color: #b3b3b3;">🟢 Способы оплаты (РФ и СНГ):</p>
+                    <div style="display: flex; gap: 15px; font-size: 14px; color: #fff;">
+                        <span>📲 СБП</span>
+                        <span>💳 Карты РФ</span>
+                        <span>👛 ЮMoney</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Перейти к оплате</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- РАЗДЕЛ ДЛЯ ВВОДА ПРОМОКОДОВ -->
     <section id="promocodes" class="section-padding alt-bg">
         <div class="container" style="text-align: center;">
-            <h2 class="section-title">Промокоды</h2>
-            <div class="about-content" style="max-width: 600px;">
-                <p>Используй промокоды при оформлении заказа, чтобы получить приятную скидку или бонус!</p>
-                <div class="support-form" style="margin-top: 20px; padding: 20px; display: inline-block; width: 100%;">
-                    <p style="font-size: 22px; color: var(--accent-hover); font-weight: bold; margin-bottom: 5px; letter-spacing: 2px;">START2026</p>
-                    <p style="font-size: 14px; color: var(--text-muted);">Дает скидку 10% на первый заказ в нашей студии!</p>
+            <h2 class="section-title">Активация Промокодов</h2>
+            <div class="about-content" style="max-width: 550px; margin: 0 auto;">
+                <p style="margin-bottom: 20px;">Введите секретный промокод ниже, чтобы проверить его статус и разблокировать эксклюзивные скидки на товары студии!</p>
+                
+                <div class="support-form" style="padding: 25px; border: 1px solid rgba(123, 44, 191, 0.3);">
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="globalPromoInput" placeholder="Введите промокод (например: START2026)" style="margin-bottom: 0; text-transform: uppercase;">
+                        <button class="btn" onclick="checkGlobalPromo()" style="white-space: nowrap;">Активировать</button>
+                    </div>
+                    <p id="promoResultStatus" style="margin-top: 15px; font-size: 14px; font-weight: bold; display: none;"></p>
                 </div>
             </div>
         </div>
@@ -121,55 +240,42 @@
         </div>
     </section>
 
-    <!-- Раздел 4: О Создателе и Фото создателя -->
+    <!-- Раздел 4: О Создателе -->
     <section id="creator" class="section-padding alt-bg">
         <div class="container">
             <h2 class="section-title">О Создателе</h2>
             <div class="support-container" style="align-items: center;">
-                
-                <!-- ВОТ БЛОК С АВАТАРКОЙ СОЗДАТЕЛЯ (КУДА ВСТАВЛЕНО ТВОЁ ФОТО) -->
                 <div style="text-align: center;">
-                    <div style="width: 280px; height: 280px; background-color: var(--bg-color); border: 3px solid var(--accent-color); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(123, 44, 191, 0.5);">
-                        <!-- Фото подгружается прямо из твоего файла. Убедись, что картинка лежит в той же папке, что и этот файл HTML! -->
+                    <div style="width: 280px; height: 280px; background-color: #0f0c1b; border: 3px solid #7b2cbf; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(123, 44, 191, 0.5);">
                         <img src="photo_2026-05-31_15-02-57 (2).jpg" alt="Jestvor Фото" style="width: 100%; height: 100%; object-fit: cover;">
                     </div>
-                    <h3 style="margin-top: 20px; font-size: 24px; color: var(--text-color);">Jestvor</h3>
-                    <p style="color: var(--accent-hover); font-weight: 500;">Видеоблогер & Основатель Студии</p>
+                    <h3 style="margin-top: 20px; font-size: 24px; color: #fff;">Jestvor</h3>
+                    <p style="color: #ea80fc; font-weight: 500;">Видеоблогер & Основатель Студии</p>
                 </div>
-                <!-- КОНЕЦ БЛОКА С ФОТО -->
-
-                <!-- Описание создателя -->
                 <div class="support-info" style="margin-bottom: 0;">
                     <h3>Идейный вдохновитель Jestvor Studio</h3>
-                    <p>Jestvor — успешный видеоблогер и создатель контента, который собрал вокруг себя команду амбициозных и креативных специалистов. Объединяя блогеров, музыкантов, дизайнеров и монтажеров под эгидой одной студии, он открывает новые возможности для развития медиа-сферы.</p>
+                    <p>Jestvor — успешный видеоблогер и создатель контента, который собрал вокруг себя команду амбизиозных и креативных специалистов. Объединяя блогеров, музыкантов, дизайнеров и монтажеров под эгидой одной студии, он открывает новые возможности для развития медиа-сферы.</p>
                     <p>Создавая эту платформу, Jestvor заложил в её основу принципы бескомпромиссного качества, постоянного поиска новых идей и всесторонней поддержки как начинающих авторов, так и опытных медиа-гигантов.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Раздел 5: Техподдержка и Способы Оплаты -->
+    <!-- Раздел 5: Техподдержка (Традиционная форма) -->
     <section id="support" class="section-padding">
         <div class="container">
-            <h2 class="section-title">Техподдержка и Оплата</h2>
+            <h2 class="section-title">Техподдержка 24/7</h2>
             <div class="support-container">
                 <div class="support-info">
                     <h3>Возникли вопросы или проблемы?</h3>
-                    <p>Наша команда специалистов готова помочь вам в любое время суток. Напишите нам, и мы решим любой технический нюанс.</p>
-                    <p><strong>График работы:</strong> 24/7 без выходных и перерывов</p>
-                    
-                    <!-- Блок Оплаты -->
-                    <div style="margin-top: 40px; padding: 20px; background-color: var(--card-bg); border-radius: 8px; border: 1px dashed rgba(123, 44, 191, 0.4);">
-                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-color);">💳 Оплата любыми способами</h4>
-                        <p style="font-size: 14px; margin-bottom: 0;">Мы принимаем любые удобные для вас способы оплаты в РФ: Банковские карты (МИР, Visa, Mastercard), СБП (Система быстрых платежей), электронные кошельки (ЮMoney) и другие популярные сервисы.</p>
-                    </div>
+                    <p>Наша команда специалистов готова помочь вам в любое время суток. Напишите нам через традиционную форму или воспользуйтесь мгновенным ИИ-помощником в правом нижнем углу экрана.</p>
+                    <p><strong>График работы:</strong> 24/7 без выходных</p>
                 </div>
-                <!-- Форма обратной связи -->
-                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение отправлено в техподдержку 24/7!');">
+                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение успешно передано старшему менеджеру!');">
                     <input type="text" placeholder="Ваше имя" required>
                     <input type="email" placeholder="Ваш Email" required>
-                    <textarea placeholder="Опишите вашу проблему, вопрос или детали заказа для сотрудничества..." rows="5" required></textarea>
-                    <button type="submit" class="btn">Отправить запрос</button>
+                    <textarea placeholder="Опишите вашу проблему или детали заказа..." rows="4" required></textarea>
+                    <button type="submit" class="btn">Отправить тикет</button>
                 </form>
             </div>
         </div>
@@ -182,5 +288,152 @@
         </div>
     </footer>
 
+    <!-- ЖИВОЙ ЧАТ-ВИДЖЕТ С ИИ-ПОМОЩНИКОМ -->
+    <div class="ai-chat-widget">
+        <button class="chat-toggle-btn" onclick="toggleChat()">💬</button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <span>🤖 ИИ-Ассистент Jest Студии</span>
+                <span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">&times;</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg ai">Привет! Я автоматический ИИ-помощник Jestvor Studio. Могу подсказать цены, рассказать о студии или помочь активировать скидку. Что тебя интересует?</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Задайте вопрос..." onkeypress="handleChatKey(event)">
+                <button class="chat-send-btn" onclick="sendChatMessage()">></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- СКРИПТЫ УПРАВЛЕНИЯ ГЛОБАЛЬНЫМ ОБНОВЛЕНИЕМ -->
+    <script>
+        // --- 1. Логика Приветствия ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Окно открывается автоматически при входе
+            document.getElementById('welcomeOverlay').style.display = 'flex';
+        });
+
+        function closeWelcome() {
+            const overlay = document.getElementById('welcomeOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 500);
+        }
+
+        // --- 2. Логика Промокодов (Глобальная и в Оплате) ---
+        let activeBasePrice = 0;
+        const VALID_PROMO = "START2026";
+
+        function checkGlobalPromo() {
+            const code = document.getElementById('globalPromoInput').value.trim().toUpperCase();
+            const statusText = document.getElementById('promoResultStatus');
+            statusText.style.display = 'block';
+
+            if (code === VALID_PROMO) {
+                statusText.style.color = '#38b000';
+                statusText.innerText = `✅ Промокод успешно активирован! Он даст вам скидку 10% в окне оплаты на любой товар.`;
+            } else if (code === "") {
+                statusText.style.color = '#ff6b6b';
+                statusText.innerText = `❌ Поле ввода пустое.`;
+            } else {
+                statusText.style.color = '#ff6b6b';
+                statusText.innerText = `❌ Промокод "${code}" не найден или его срок действия истек.`;
+            }
+        }
+
+        function openOrderModal(itemName, itemPrice) {
+            activeBasePrice = itemPrice;
+            document.getElementById('modalItemName').innerText = itemName;
+            document.getElementById('modalItemPrice').innerText = itemPrice + ' ₽';
+            document.getElementById('formAmount').value = itemPrice;
+            document.getElementById('formOrder').value = 'jest_' + Date.now();
+            document.getElementById('modalPromoInput').value = ''; 
+            
+            document.getElementById('paymentModal').style.display = 'flex';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function applyModalPromo() {
+            const promo = document.getElementById('modalPromoInput').value.trim().toUpperCase();
+            let currentPrice = activeBasePrice;
+            
+            if (promo === VALID_PROMO) {
+                currentPrice = Math.round(activeBasePrice * 0.9);
+                document.getElementById('modalItemPrice').innerText = currentPrice + ' ₽ (Скидка 10% применена)';
+            } else {
+                document.getElementById('modalItemPrice').innerText = activeBasePrice + ' ₽';
+            }
+            document.getElementById('formAmount').value = currentPrice;
+        }
+
+        // --- 3. Логика Умного ИИ-Чата (Автоответчик Базы Знаний) ---
+        function toggleChat() {
+            const chatWin = document.getElementById('chatWindow');
+            chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function handleChatKey(e) {
+            if (e.key === 'Enter') sendChatMessage();
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            appendMessage(text, 'user');
+            input.value = '';
+
+            // Симуляция размышления ИИ
+            setTimeout(() => {
+                const aiReply = getAiResponse(text);
+                appendMessage(aiReply, 'ai');
+            }, 600);
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById('chatMessages');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('msg', sender);
+            msgDiv.innerText = text;
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // База знаний ИИ-помощника, настроенная под Jest Studio
+        function getAiResponse(userText) {
+            const t = userText.toLowerCase();
+            
+            if (t.includes('привет') || t.includes('здравствуй') || t.includes('ку')) {
+                return "Приветствую в нашем чате! Чем я могу помочь тебе сегодня?";
+            }
+            if (t.includes('цена') || t.includes('стоимость') || t.includes('товар') || t.includes('купить')) {
+                return "У нас отличные цены на дизайн: Аватарка — 250₽, Превью — 350₽, Обычная Шапка — 450₽, Оверлей — 500₽, Анимированная аватарка — 600₽, Анимированный оверлей — 1200₽. Нажмите кнопку «Купить» на карточке нужного товара для оплаты!";
+            }
+            if (t.includes('промокод') || t.includes('скидк')) {
+                return "Прямо сейчас действует промокод START2026. Он дает скидку 10% на абсолютно любой товар из нашего каталога. Активировать можно в разделе 'Промокоды' или прямо при оплате.";
+            }
+            if (t.includes('оплат') || t.includes('карт') || t.includes('сбп')) {
+                return "Мы поддерживаем все популярные методы оплаты в России: Систему Быстрых Платежей (СБП), любые банковские карты (МИР, Visa, Mastercard) и кошельки ЮMoney. Оплата полностью безопасна.";
+            }
+            if (t.includes('кто создатель') || t.includes('jestvor') || t.includes('автор')) {
+                return "Создателем и идейным вдохновителем нашей студии является популярный видеоблогер Jestvor!";
+            }
+            if (t.includes('как работать') || t.includes('сотрудничество') || t.includes('ваканси')) {
+                return "В нашей студии работает более 10 профессионалов. Мы всегда рады сотрудничеству с ютуберами, музыкантами и дизайнерами. Напишите подробности в форму обратной связи на сайте, и Jestvor или менеджеры рассмотрят ваше предложение!";
+            }
+            
+            return "Хороший вопрос! Наша техподдержка работает в режиме 24/7. Если вы хотите обсудить нестандартный заказ или возникла трудность, вы можете заполнить форму тикетов чуть левее, и наши специалисты свяжутся с вами в течение нескольких минут.";
+        }
+
+        // Закрытие модального окна оплаты по клику вне формы
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target == modal) closeOrderModal();
+        }
+    </script>
 </body>
 </html>

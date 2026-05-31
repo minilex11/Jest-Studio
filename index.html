@@ -14,8 +14,10 @@
             <div class="logo">Jest Studio</div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#products">Товар</a></li>
+                    <li><a href="#products">Товары и Цены</a></li>
+                    <li><a href="#promocodes">Промокоды</a></li>
                     <li><a href="#about">Описание</a></li>
+                    <li><a href="#creator">О Создателе</a></li>
                     <li><a href="#support">Техподдержка</a></li>
                 </ul>
             </nav>
@@ -30,58 +32,143 @@
         </div>
     </section>
 
-    <!-- Раздел 1: Товар -->
+    <!-- Раздел 1: Товары и Цены -->
     <section id="products" class="section-padding">
         <div class="container">
-            <h2 class="section-title">Наши Товары</h2>
-            <div class="products-grid">
-                <!-- Карточка товара 1 -->
+            <h2 class="section-title">Наши Товары и Цены</h2>
+            <div class="products-grid" style="max-width: 1200px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                
+                <!-- Товар 1 -->
                 <div class="product-card">
-                    <div class="product-icon">📦</div>
-                    <h3>Премиум Пакет</h3>
-                    <p class="price">990 ₽</p>
-                    <p>Идеальное решение для быстрого старта и базовой настройки вашего проекта.</p>
+                    <div class="product-icon">🖼️</div>
+                    <h3>Аватарка</h3>
+                    <p class="price">250 ₽</p>
+                    <p>Стильная и сочная аватарка для твоего профиля, которая выделит тебя среди остальных.</p>
                     <button class="btn">Купить</button>
                 </div>
-                <!-- Карточка товара 2 -->
-                <div class="product-card featured">
-                    <div class="product-icon">🚀</div>
-                    <h3>Ультра Студио</h3>
-                    <p class="price">1 990 ₽</p>
-                    <p>Максимальный набор инструментов, приоритетный доступ и эксклюзивный контент.</p>
+
+                <!-- Товар 2 -->
+                <div class="product-card">
+                    <div class="product-icon">📐</div>
+                    <h3>Шапка</h3>
+                    <p class="price">450 ₽</p>
+                    <p>Профессиональный баннер для оформления твоего YouTube, Twitch или Telegram канала.</p>
                     <button class="btn">Купить</button>
+                </div>
+
+                <!-- Товар 3 -->
+                <div class="product-card">
+                    <div class="product-icon">🎬</div>
+                    <h3>Превью</h3>
+                    <p class="price">350 ₽</p>
+                    <p>Кликабельная обложка для видео, которая поднимет твои просмотры до максимума.</p>
+                    <button class="btn">Купить</button>
+                </div>
+
+                <!-- Товар 4 -->
+                <div class="product-card">
+                    <div class="product-icon">🖥️</div>
+                    <h3>Оверлей</h3>
+                    <p class="price">500 ₽</p>
+                    <p>Красивое оформление стрима, делающее твою трансляцию эстетичной и приятной для зрителя.</p>
+                    <button class="btn">Купить</button>
+                </div>
+
+                <!-- Товар 5 -->
+                <div class="product-card featured">
+                    <div class="product-icon">✨</div>
+                    <h3>Анимированная Аватарка</h3>
+                    <p class="price">600 ₽</p>
+                    <p>Живая GIF/видео аватарка с крутыми эффектами, приковывающая к себе все взгляды.</p>
+                    <button class="btn">Купить</button>
+                </div>
+
+                <!-- Товар 6 -->
+                <div class="product-card featured">
+                    <div class="product-icon">🔥</div>
+                    <h3>Анимированный Оверлей</h3>
+                    <p class="price">1 200 ₽</p>
+                    <p>Динамический оверлей высшего качества с плавной анимацией для профессиональных стримеров.</p>
+                    <button class="btn">Купить</button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел 2: Промокоды -->
+    <section id="promocodes" class="section-padding alt-bg">
+        <div class="container" style="text-align: center;">
+            <h2 class="section-title">Промокоды</h2>
+            <div class="about-content" style="max-width: 600px;">
+                <p>Используй промокоды при оформлении заказа, чтобы получить приятную скидку или бонус!</p>
+                <div class="support-form" style="margin-top: 20px; padding: 20px; display: inline-block; width: 100%;">
+                    <p style="font-size: 22px; color: var(--accent-hover); font-weight: bold; margin-bottom: 5px; letter-spacing: 2px;">START2026</p>
+                    <p style="font-size: 14px; color: var(--text-muted);">Дает скидку 10% на первый заказ в нашей студии!</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Раздел 2: Описание -->
-    <section id="about" class="section-padding alt-bg">
+    <!-- Раздел 3: Описание -->
+    <section id="about" class="section-padding">
         <div class="container">
             <h2 class="section-title">Описание Студии</h2>
-            <div class="about-content">
-                <p><strong>Jest Studio</strong> — это современная платформа, специализирующаяся на разработке и предоставлении высококачественных цифровых продуктов, игровых решений и элементов кастомизации.</p>
-                <p>Мы создаем инструменты, которые помогают контент-мейкерам, геймерам и разработчикам выводить свои проекты на новый уровень. Наша цель — объединить эстетичный визуал, функциональность и доступность в каждом продукте.</p>
+            <div class="about-content" style="text-align: justify; max-width: 900px;">
+                <p><strong>Jestvor Studio</strong> — это студия, созданная видеоблогером <strong>Jestvor</strong>. В нашей студии ты можешь не только найти различный товар, который ты можешь приобрести для себя или своих знакомых, но и начать сотрудничать с блогером, работать в его компании и сотрудничать с другими ютуберами, музыкантами и многими другими творческими личностями.</p>
+                <p>Помимо коммерческой деятельности, жизнь студии освещена различными интересными примерами работ, масштабными конкурсами и другими крутыми вещами. В команде студии уже работает более 10 профессионалов своего дела, и каждый день студия открывает для себя что-то новое! Если у вас возникают какие-либо трудности, вы всегда можете обратиться в нашу техподдержку. Студия и поддержка работают в режиме 24/7.</p>
             </div>
         </div>
     </section>
 
-    <!-- Раздел 3: Техподдержка -->
+    <!-- Раздел 4: О Создателе и Фото создателя -->
+    <section id="creator" class="section-padding alt-bg">
+        <div class="container">
+            <h2 class="section-title">О Создателе</h2>
+            <div class="support-container" style="align-items: center;">
+                
+                <!-- ВОТ БЛОК С АВАТАРКОЙ СОЗДАТЕЛЯ (КУДА ВСТАВЛЕНО ТВОЁ ФОТО) -->
+                <div style="text-align: center;">
+                    <div style="width: 280px; height: 280px; background-color: var(--bg-color); border: 3px solid var(--accent-color); border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(123, 44, 191, 0.5);">
+                        <!-- Фото подгружается прямо из твоего файла. Убедись, что картинка лежит в той же папке, что и этот файл HTML! -->
+                        <img src="photo_2026-05-31_15-02-57 (2).jpg" alt="Jestvor Фото" style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <h3 style="margin-top: 20px; font-size: 24px; color: var(--text-color);">Jestvor</h3>
+                    <p style="color: var(--accent-hover); font-weight: 500;">Видеоблогер & Основатель Студии</p>
+                </div>
+                <!-- КОНЕЦ БЛОКА С ФОТО -->
+
+                <!-- Описание создателя -->
+                <div class="support-info" style="margin-bottom: 0;">
+                    <h3>Идейный вдохновитель Jestvor Studio</h3>
+                    <p>Jestvor — успешный видеоблогер и создатель контента, который собрал вокруг себя команду амбициозных и креативных специалистов. Объединяя блогеров, музыкантов, дизайнеров и монтажеров под эгидой одной студии, он открывает новые возможности для развития медиа-сферы.</p>
+                    <p>Создавая эту платформу, Jestvor заложил в её основу принципы бескомпромиссного качества, постоянного поиска новых идей и всесторонней поддержки как начинающих авторов, так и опытных медиа-гигантов.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Раздел 5: Техподдержка и Способы Оплаты -->
     <section id="support" class="section-padding">
         <div class="container">
-            <h2 class="section-title">Техподдержка</h2>
+            <h2 class="section-title">Техподдержка и Оплата</h2>
             <div class="support-container">
                 <div class="support-info">
                     <h3>Возникли вопросы или проблемы?</h3>
                     <p>Наша команда специалистов готова помочь вам в любое время суток. Напишите нам, и мы решим любой технический нюанс.</p>
-                    <p><strong>Email:</strong> support@jeststudio.com</p>
-                    <p><strong>График работы:</strong> 24/7 без выходных</p>
+                    <p><strong>График работы:</strong> 24/7 без выходных и перерывов</p>
+                    
+                    <!-- Блок Оплаты -->
+                    <div style="margin-top: 40px; padding: 20px; background-color: var(--card-bg); border-radius: 8px; border: 1px dashed rgba(123, 44, 191, 0.4);">
+                        <h4 style="font-size: 18px; margin-bottom: 10px; color: var(--text-color);">💳 Оплата любыми способами</h4>
+                        <p style="font-size: 14px; margin-bottom: 0;">Мы принимаем любые удобные для вас способы оплаты в РФ: Банковские карты (МИР, Visa, Mastercard), СБП (Система быстрых платежей), электронные кошельки (ЮMoney) и другие популярные сервисы.</p>
+                    </div>
                 </div>
                 <!-- Форма обратной связи -->
-                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение отправлено!');">
+                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение отправлено в техподдержку 24/7!');">
                     <input type="text" placeholder="Ваше имя" required>
                     <input type="email" placeholder="Ваш Email" required>
-                    <textarea placeholder="Опишите вашу проблему или вопрос..." rows="5" required></textarea>
+                    <textarea placeholder="Опишите вашу проблему, вопрос или детали заказа для сотрудничества..." rows="5" required></textarea>
                     <button type="submit" class="btn">Отправить запрос</button>
                 </form>
             </div>
@@ -91,7 +178,7 @@
     <!-- Подвал сайта -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Jest Studio. Все права защищены.</p>
+            <p>&copy; 2026 Jestvor Studio. Все права защищены.</p>
         </div>
     </footer>
 

@@ -3,552 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jest Studio — №1 в Росии</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Jest Studio | Технический перерыв</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --accent-glow: rgba(157, 78, 221, 0.6);
-            --bg-dark: #0f0c1b;
-            --bg-card: #18142c;
-            --purple-neon: #7b2cbf;
+        /* Общие стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* 1. Модальное окно приветствия */
-        .welcome-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 12, 27, 0.95); z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            opacity: 1; transition: opacity 0.5s ease;
-        }
-        .welcome-card {
-            background: var(--bg-card); border: 2px solid var(--purple-neon);
-            border-radius: 16px; padding: 40px; max-width: 500px; width: 90%;
-            text-align: center; box-shadow: 0 0 40px var(--accent-glow);
-        }
-        .welcome-card h2 {
-            font-size: 28px; margin-bottom: 15px;
-            background: linear-gradient(45deg, #ea80fc, #ff6b6b);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        body {
+            background: radial-gradient(circle at center, #1a0033 0%, #0b0b0e 100%);
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+            padding: 20px;
         }
 
-        /* 2. Живой ИИ-Чат Техподдержки в углу */
-        .ai-chat-widget {
-            position: fixed; bottom: 20px; right: 20px; z-index: 5000;
-            font-family: sans-serif;
+        /* Контейнер */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(20, 20, 25, 0.6);
+            padding: 50px 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
         }
-        .chat-toggle-btn {
-            width: 60px; height: 60px; border-radius: 50%;
-            background: linear-gradient(45deg, #7b2cbf, #9d4edd);
-            border: none; color: white; font-size: 26px; cursor: pointer;
-            box-shadow: 0 4px 20px var(--accent-glow);
-            transition: transform 0.3s ease;
-        }
-        .chat-toggle-btn:hover { transform: scale(1.1); }
-        
-        .chat-window {
-            position: absolute; bottom: 75px; right: 0;
-            width: 350px; height: 450px; background: var(--bg-card);
-            border: 2px solid var(--purple-neon); border-radius: 12px;
-            display: none; flex-direction: column; overflow: hidden;
-            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
-        }
-        .chat-header {
-            background: var(--purple-neon); padding: 15px; color: white;
-            font-weight: bold; display: flex; justify-content: space-between; align-items: center;
-        }
-        .chat-messages {
-            flex: 1; padding: 15px; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 10px;
-            background: var(--bg-dark);
-        }
-        .msg { padding: 10px 14px; border-radius: 8px; max-width: 80%; font-size: 14px; line-height: 1.4; }
-        .msg.ai { background: #241e42; color: #f8f9fa; align-self: flex-start; border-left: 3px solid #9d4edd; }
-        .msg.user { background: var(--purple-neon); color: white; align-self: flex-end; }
-        
-        .chat-footer { padding: 10px; display: flex; gap: 8px; background: var(--bg-card); border-top: 1px solid rgba(255,255,255,0.05); }
-        .chat-input { flex: 1; background: var(--bg-dark); border: 1px solid var(--purple-neon); border-radius: 4px; padding: 8px; color: white; }
-        .chat-send-btn { background: var(--purple-neon); border: none; color: white; padding: 8px 12px; border-radius: 4px; cursor: pointer; }
 
-        /* 3. ПОЛНОЭКРАННЫЙ ЧАТ ОБСУЖДЕНИЯ И ЗАКАЗА */
-        .fullscreen-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark); z-index: 8000;
-            display: none; flex-direction: column;
+        /* Логотип и иконка */
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
         }
-        .fs-header {
-            background: var(--bg-card); padding: 20px;
-            border-bottom: 2px solid var(--purple-neon);
-            display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-        }
-        .fs-manager-info { display: flex; align-items: center; gap: 15px; }
-        .fs-avatar {
-            width: 45px; height: 45px; background: linear-gradient(45deg, #7b2cbf, #ff6b6b);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; color: white; font-size: 18px;
-        }
-        .fs-status { color: #38b000; font-size: 12px; display: flex; align-items: center; gap: 4px; }
-        .fs-close { font-size: 32px; color: #b3b3b3; cursor: pointer; transition: color 0.3s; }
-        .fs-close:hover { color: #ff6b6b; }
 
-        .fs-main-layout { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Левая сторона: Рабочая зона чата */
-        .fs-chat-area { flex: 1; display: flex; flex-direction: column; background: #0b0914; }
-        .fs-messages-container { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        
-        .fs-msg { max-width: 65%; padding: 15px 20px; border-radius: 12px; line-height: 1.5; font-size: 15px; }
-        .fs-msg.manager { background: var(--bg-card); color: #fff; align-self: flex-start; border-left: 4px solid var(--purple-neon); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .fs-msg.user { background: var(--purple-neon); color: #fff; align-self: flex-end; box-shadow: 0 4px 15px rgba(123, 44, 191, 0.3); }
-
-        .fs-input-panel { padding: 20px 30px; background: var(--bg-card); display: flex; gap: 15px; border-top: 1px solid rgba(255,255,255,0.05); }
-        .fs-input { flex: 1; background: var(--bg-dark); border: 2px solid var(--purple-neon); border-radius: 8px; padding: 15px; color: white; font-size: 15px; }
-        
-        /* Правая боковая панель: Оплата внутри чата */
-        .fs-side-panel {
-            width: 380px; background: var(--bg-card);
-            border-left: 2px solid var(--purple-neon);
-            padding: 30px; display: flex; flex-direction: column; gap: 20px;
-            overflow-y: auto;
+        .logo span {
+            color: #9d4edd;
         }
-        .side-card { background: var(--bg-dark); padding: 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
 
-        .logo-animated {
-            font-weight: 800; letter-spacing: 2px;
-            background: linear-gradient(45deg, #9d4edd, #ff6b6b);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: logo-pulse 3s ease-in-out infinite alternate;
+        .gear-icon {
+            font-size: 50px;
+            color: #ff9e00;
+            margin-bottom: 25px;
+            animation: spin 4s linear infinite;
         }
-        @keyframes logo-pulse {
-            0% { filter: drop-shadow(0 0 2px rgba(157, 78, 221, 0.4)); }
-            100% { filter: drop-shadow(0 0 15px rgba(157, 78, 221, 0.9)); }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff9e00, #9d4edd);
+            -webkit-background-clip: text;
+            background-clip: text; /* Исправлено предупреждение vendorPrefix */
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #a0a0a5;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Таймер */
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 45px;
+        }
+
+        .countdown-item {
+            background: #141419;
+            border: 1px solid #1f1f27;
+            padding: 15px;
+            border-radius: 12px;
+            min-width: 90px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .countdown-time {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ff9e00;
+        }
+
+        .countdown-label {
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* Кнопка Телеграм */
+        .btn-telegram {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #0088cc;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 136, 204, 0.4);
+        }
+
+        .btn-telegram:hover {
+            background: #0077b3;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 136, 204, 0.6);
+        }
+
+        .btn-telegram i {
+            font-size: 1.3rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .countdown { gap: 10px; }
+            .countdown-item { min-width: 70px; padding: 10px; }
+            .countdown-time { font-size: 1.6rem; }
+            .countdown-label { font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ОКНО ПРИВЕТСТВИЯ ПРИ ВХОДЕ -->
-    <div id="welcomeOverlay" class="welcome-overlay">
-        <div class="welcome-card">
-            <h2>🚀 Глобальное Обновление!</h2>
-            <p style="color: #b3b3b3; line-height: 1.6; margin-bottom: 25px;">
-                Добро пожаловать в обновленную версию <strong>Jest Studio</strong>!<br>
-                Мы полностью переработали систему покупок: теперь вы обсуждаете детали заказа в интерактивном полноэкранном чате напрямую с дизайнером еще до оплаты!
-            </p>
-            <button class="btn" onclick="closeWelcome()" style="width: 100%; padding: 12px;">Войти на сайт</button>
+    <div class="container">
+        <div class="logo">JEST <span>STUDIO</span></div>
+        <div class="gear-icon"><i class="fas fa-cog"></i></div>
+        <h1>Технический перерыв</h1>
+        <p>Мы обновляем платформу, добавляем новые квесты и загружаем эксклюзивный мерч. Наш сайт откроется уже совсем скоро!</p>
+
+        <!-- Таймер обратного отсчета -->
+        <div class="countdown">
+            <div class="countdown-item">
+                <span class="countdown-time" id="days">00</span>
+                <span class="countdown-label">Дней</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-time" id="hours">00</span>
+                <span class="countdown-label">Часов</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-time" id="minutes">00</span>
+                <span class="countdown-label">Минут</span>
+            </div>
+            <div class="countdown-item">
+                <span class="countdown-time" id="seconds">00</span>
+                <span class="countdown-label">Секунд</span>
+            </div>
         </div>
+
+        <!-- Ссылка на Telegram -->
+        <a href="https://t.me/JestvorStudio" target="_blank" class="btn-telegram">
+            <i class="fab fa-telegram-plane"></i> Новости запуска в Telegram
+        </a>
     </div>
 
-    <!-- Шапка сайта -->
-    <header>
-        <div class="container header-container">
-            <div class="logo logo-animated">JEST//STUDIO</div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#products">Товары и Цены</a></li>
-                    <li><a href="#promocodes">Промокоды</a></li>
-                    <li><a href="#about">Описание</a></li>
-                    <li><a href="#creator">О Создателе</a></li>
-                    <li><a href="#support">Техподдержка</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Главный баннер -->
-    <section class="hero">
-        <div class="container">
-            <h1>Добро пожаловать в Jest Studio</h1>
-            <p>Качественные цифровые товары, индивидуальный чат с дизайнером и безопасная оплата</p>
-        </div>
-    </section>
-
-    <!-- Раздел 1: Товары и Цены -->
-    <section id="products" class="section-padding">
-        <div class="container">
-            <h2 class="section-title">Наши Товары и Цены</h2>
-            <div class="products-grid" style="max-width: 1200px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-                
-                <div class="product-card">
-                    <div class="product-icon">🖼️</div>
-                    <h3>Аватарка</h3>
-                    <p class="price">250 ₽</p>
-                    <p>Стильная и сочная аватарка для твоего профиля, которая выделит тебя среди остальных.</p>
-                    <button class="btn" onclick="openFullscreenChat('Аватарка', 250)">Купить</button>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-icon">📐</div>
-                    <h3>Шапка</h3>
-                    <p class="price">450 ₽</p>
-                    <p>Профессиональный баннер для оформления твоего YouTube, Twitch или Telegram канала.</p>
-                    <button class="btn" onclick="openFullscreenChat('Шапка', 450)">Купить</button>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-icon">🎬</div>
-                    <h3>Превью</h3>
-                    <p class="price">350 ₽</p>
-                    <p>Кликабельная обложка для видео, которая поднимет твои просмотры до максимума.</p>
-                    <button class="btn" onclick="openFullscreenChat('Превью', 350)">Купить</button>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-icon">🖥️</div>
-                    <h3>Оверлей</h3>
-                    <p class="price">500 ₽</p>
-                    <p>Красивое оформление стрима, делающее твою трансляцию эстетичной и приятной для зрителя.</p>
-                    <button class="btn" onclick="openFullscreenChat('Оверлей', 500)">Купить</button>
-                </div>
-
-                <div class="product-card featured">
-                    <div class="product-icon">✨</div>
-                    <h3>Анимированная Аватарка</h3>
-                    <p class="price">600 ₽</p>
-                    <p>Живая GIF/видео аватарка с крутыми эффектами, приковывающая к себе все взгляды.</p>
-                    <button class="btn" onclick="openFullscreenChat('Анимированная Аватарка', 600)">Купить</button>
-                </div>
-
-                <div class="product-card featured">
-                    <div class="product-icon">🔥</div>
-                    <h3>Анимированный Оверлей</h3>
-                    <p class="price">1 200 ₽</p>
-                    <p>Динамический оверлей высшего качества с плавной анимацией для профессиональных стримеров.</p>
-                    <button class="btn" onclick="openFullscreenChat('Анимированный Оверлей', 1200)">Купить</button>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- ПОЛНОЭКРАННЫЙ ИНТЕРАКТИВНЫЙ ЧАТ ЗАКАЗА И ВЫДАЧИ -->
-    <div id="fullscreenChatModal" class="fullscreen-modal">
-        <div class="fs-header">
-            <div class="fs-manager-info">
-                <div class="fs-avatar" id="activeManagerAvatar">Е</div>
-                <div>
-                    <h3 style="margin: 0; font-size: 18px; color: white;" id="activeManagerName">Егор (Дизайнер)</h3>
-                    <div class="fs-status"><span>🟢</span> в сети / принимает ТЗ</div>
-                </div>
-            </div>
-            <div class="fs-close" onclick="closeFullscreenChat()">&times;</div>
-        </div>
-
-        <div class="fs-main-layout">
-            <!-- Основное окно диалога -->
-            <div class="fs-chat-area">
-                <div class="fs-messages-container" id="fsMessagesContainer">
-                    <!-- Заполняется динамически через JS -->
-                </div>
-                <div class="fs-input-panel">
-                    <input type="text" id="fsChatInput" class="fs-input" placeholder="Напишите менеджеру ваши пожелания по дизайну..." onkeypress="handleFsKey(event)">
-                    <button class="btn" onclick="sendFsMessage()" style="padding: 0 25px;">Отправить</button>
-                </div>
-            </div>
-
-            <!-- Боковая панель: Кнопка оплаты и детали -->
-            <div class="fs-side-panel">
-                <h3 style="margin: 0; font-size: 20px; color: white; text-align: center;">Оформление</h3>
-                
-                <div class="side-card">
-                    <p style="margin: 0 0 8px 0; color: #b3b3b3; font-size: 13px;">Выбранная услуга:</p>
-                    <p style="margin: 0; font-size: 18px; font-weight: bold; color: white;" id="sideItemName">Аватарка</p>
-                    <p style="margin: 10px 0 0 0; font-size: 22px; font-weight: bold; color: #ea80fc;" id="sideItemPrice">250 ₽</p>
-                </div>
-
-                <!-- ФОРМА ОПЛАТЫ AAIO ВНУТРИ ЧАТА -->
-                <form action="https://aaio.io/merchant/pay" method="GET" target="_blank" class="side-card" style="display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--purple-neon);">
-                    <input type="hidden" name="merchant_id" value="ID_ТВОЕГО_МАГАЗИНА">
-                    <input type="hidden" id="fsFormAmount" name="amount" value="">
-                    <input type="hidden" id="fsFormOrder" name="order_id" value="">
-
-                    <div>
-                        <label style="font-size: 12px; color: #b3b3b3; display: block; margin-bottom: 5px;">Ваша эл. почта (Email):</label>
-                        <input type="email" name="email" placeholder="example@mail.ru" required style="width: 100%; background: var(--bg-dark); border: 1px solid var(--purple-neon); color: white; padding: 10px; border-radius: 4px;">
-                    </div>
-
-                    <div>
-                        <label style="font-size: 12px; color: #b3b3b3; display: block; margin-bottom: 5px;">Применить промокод:</label>
-                        <input type="text" id="fsPromoInput" placeholder="START2026" oninput="applyFsPromo()" style="width: 100%; background: var(--bg-dark); border: 1px solid var(--purple-neon); color: white; padding: 10px; border-radius: 4px; text-transform: uppercase;">
-                    </div>
-
-                    <div style="font-size: 12px; color: #b3b3b3; line-height: 1.4; background: rgba(255,255,255,0.02); padding: 8px; border-radius: 4px;">
-                        💳 Доступно: СБП, Мир, Visa, ЮMoney
-                    </div>
-
-                    <button type="submit" class="btn" style="width: 100%; padding: 14px; font-weight: bold; background: linear-gradient(45deg, #7b2cbf, #9d4edd);">Перейти к оплате заказа</button>
-                </form>
-
-                <div style="font-size: 12px; color: #6c757d; text-align: center; line-height: 1.5;">
-                    💬 Напишите менеджеру требования слева. После оплаты ваш заказ мгновенно перейдет в статус "Выполняется".
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- РАЗДЕЛ ДЛЯ ВВОДА ПРОМОКОДОВ -->
-    <section id="promocodes" class="section-padding alt-bg">
-        <div class="container" style="text-align: center;">
-            <h2 class="section-title">Активация Промокодов</h2>
-            <div class="about-content" style="max-width: 550px; margin: 0 auto;">
-                <p style="margin-bottom: 20px;">Введите секретный промокод ниже, чтобы проверить его статус и разблокировать эксклюзивные скидки на товары студии!</p>
-                
-                <div class="support-form" style="padding: 25px; border: 1px solid rgba(123, 44, 191, 0.3);">
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="globalPromoInput" placeholder="Введите промокод (например: START2026)" style="margin-bottom: 0; text-transform: uppercase;">
-                        <button class="btn" onclick="checkGlobalPromo()" style="white-space: nowrap;">Активировать</button>
-                    </div>
-                    <p id="promoResultStatus" style="margin-top: 15px; font-size: 14px; font-weight: bold; display: none;"></p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Раздел 3: Описание -->
-    <section id="about" class="section-padding">
-        <div class="container">
-            <h2 class="section-title">Описание Студии</h2>
-            <div class="about-content" style="text-align: justify; max-width: 900px;">
-                <p><strong>Jestvor Studio</strong> — это студия, созданная видеоблогером <strong>Jestvor</strong>. В нашей студии ты можешь не только найти различный товар, который ты можешь приобрести для себя или своих знакомых, но и начать сотрудничать с блогером, работать в его компании и сотрудничать с другими ютуберами, музыкантами и многими другими творческими личностями.</p>
-                <p>Помимо коммерческой деятельности, жизнь студии освещена различными интересными примерами работ, масштабными конкурсами и другими крутыми вещами. В команде студии уже работает более 10 профессионалов своего дела, и каждый день студия открывает для себя что-то новое! Если у вас возникают какие-либо трудности, вы всегда можете обратиться в нашу техподдержку. Студия и поддержка работают в режиме 24/7.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Раздел 4: О Создателе -->
-    <section id="creator" class="section-padding alt-bg">
-        <div class="container">
-            <h2 class="section-title">О Создателе</h2>
-            <div class="support-container" style="align-items: center;">
-                <div style="text-align: center;">
-                    <div style="width: 280px; height: 280px; background-color: #0f0c1b; border: 3px solid #7b2cbf; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center; overflow: hidden; box-shadow: 0 0 20px rgba(123, 44, 191, 0.5);">
-                        <img src="photo_2026-05-31_14-40-22.jpg" alt="Jestvor Фото" style="width: 100%; height: 100%; object-fit: cover;">
-                    </div>
-                    <h3 style="margin-top: 20px; font-size: 24px; color: #fff;">Jestvor</h3>
-                    <p style="color: #ea80fc; font-weight: 500;">Видеоблогер & Основатель Студии</p>
-                </div>
-                <div class="support-info" style="margin-bottom: 0;">
-                    <h3>Идейный вдохновитель Jestvor Studio</h3>
-                    <p>Jestvor — успешный видеоблогер и создатель контента, который собрал вокруг себя команду амбициозных и креативных специалистов. Объединяя блогеров, музыкантов, дизайнеров и монтажеров под эгидой одной студии, он открывает новые возможности для развития медиа-сферы.</p>
-                    <p>Создавая эту платформу, Jestvor заложил в её основу принципы бескомпромиссного качества, постоянного поиска новых идей и всесторонней поддержки как начинающих авторов, так и опытных медиа-гигантов.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Раздел 5: Техподдержка -->
-    <section id="support" class="section-padding">
-        <div class="container">
-            <h2 class="section-title">Техподдержка 24/7</h2>
-            <div class="support-container">
-                <div class="support-info">
-                    <h3>Возникли вопросы или проблемы?</h3>
-                    <p>Наша команда специалистов готова помочь вам в любое время суток. Напишите нам через традиционную форму или воспользуйтесь мгновенным ИИ-помощником в правом нижнем углу экрана.</p>
-                    <p><strong>График работы:</strong> 24/7 без выходных</p>
-                </div>
-                <form class="support-form" onsubmit="event.preventDefault(); alert('Сообщение успешно передано старшему менеджеру!');">
-                    <input type="text" placeholder="Ваше имя" required>
-                    <input type="email" placeholder="Ваш Email" required>
-                    <textarea placeholder="Опишите вашу проблему или детали заказа..." rows="4" required></textarea>
-                    <button type="submit" class="btn">Отправить тикет</button>
-                </form>
-            </div>
-        </div>
-    </section>
-
-    <!-- Подвал сайта -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 Jestvor Studio. Все права защищены.</p>
-        </div>
-    </footer>
-
-    <!-- ЖИВОЙ ЧАТ-ВИДЖЕТ С ИИ-ПОМОЩНИКОМ (Техподдержка по сайту) -->
-    <div class="ai-chat-widget">
-        <button class="chat-toggle-btn" onclick="toggleChat()">💬</button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <span>🤖 ИИ-Ассистент Jest Студии</span>
-                <span onclick="toggleChat()" style="cursor:pointer; font-size: 20px;">&times;</span>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg ai">Привет! Я автоматический ИИ-помощник Jestvor Studio. Могу подсказать цены, рассказать о студии или помочь активировать скидку. Что тебя интересует?</div>
-            </div>
-            <div class="chat-footer">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Задайте вопрос..." onkeypress="handleChatKey(event)">
-                <button class="chat-send-btn" onclick="sendChatMessage()">></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- СКРИПТЫ УПРАВЛЕНИЯ ВСЕМИ ИНТЕРАКТИВНЫМИ ФУНКЦИЯМИ -->
     <script>
-        // --- 1. Логика Приветствия ---
-        window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('welcomeOverlay').style.display = 'flex';
-        });
+        // Установка точной даты открытия на 5 Июня 2026 года
+        const launchDate = new Date("June 5, 2026 00:00:00").getTime();
 
-        function closeWelcome() {
-            const overlay = document.getElementById('welcomeOverlay');
-            overlay.style.opacity = '0';
-            setTimeout(() => { overlay.style.display = 'none'; }, 500);
-        }
+        const countdownFunction = setInterval(() => {
+            const now = new Date().getTime();
+            const distance = launchDate - now;
 
-        // --- 2. Логика Промокодов ---
-        let activeBasePrice = 0;
-        const VALID_PROMO = "START2026";
+            // Расчет единиц времени
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        function checkGlobalPromo() {
-            const code = document.getElementById('globalPromoInput').value.trim().toUpperCase();
-            const statusText = document.getElementById('promoResultStatus');
-            statusText.style.display = 'block';
+            // Красивый вывод с нулями
+            document.getElementById("days").innerText = days < 10 ? "0" + days : days;
+            document.getElementById("hours").innerText = hours < 10 ? "0" + hours : hours;
+            document.getElementById("minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+            document.getElementById("seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
 
-            if (code === VALID_PROMO) {
-                statusText.style.color = '#38b000';
-                statusText.innerText = `✅ Промокод успешно активирован! Он даст вам скидку 10% в окне заказа на любой товар.`;
-            } else if (code === "") {
-                statusText.style.color = '#ff6b6b';
-                statusText.innerText = `❌ Поле ввода пустое.`;
-            } else {
-                statusText.style.color = '#ff6b6b';
-                statusText.innerText = `❌ Промокод "${code}" не найден или его срок действия истек.`;
+            // Когда время выйдет
+            if (distance < 0) {
+                clearInterval(countdownFunction);
+                document.querySelector(".container").innerHTML = `
+                    <div class="logo">JEST <span>STUDIO</span></div>
+                    <h1>Мы открылись!</h1>
+                    <p>Добро пожаловать на основную платформу Jest Studio. Перезагрузите страницу для входа!</p>
+                    <a href="https://t.me/JestvorStudio" target="_blank" class="btn-telegram">
+                        <i class="fab fa-telegram-plane"></i> Наш Telegram
+                    </a>
+                `;
             }
-        }
-
-        // --- 3. Логика Полноэкранного Чата Покупки и Смены Продавцов ---
-        const managers = ["Егор", "Ваня", "Алексей", "Данил"];
-        let currentManager = "";
-
-        function openFullscreenChat(itemName, itemPrice) {
-            activeBasePrice = itemPrice;
-            
-            // Выбираем случайного продавца
-            currentManager = managers[Math.floor(Math.random() * managers.length)];
-            
-            // Обновляем шапку чата данными продавца
-            document.getElementById('activeManagerName').innerText = `${currentManager} (Дизайнер Jest Studio)`;
-            document.getElementById('activeManagerAvatar').innerText = currentManager.charAt(0);
-            
-            // Обновляем боковую панель заказа
-            document.getElementById('sideItemName').innerText = itemName;
-            document.getElementById('sideItemPrice').innerText = itemPrice + ' ₽';
-            document.getElementById('fsFormAmount').value = itemPrice;
-            document.getElementById('fsFormOrder').value = 'jest_' + Date.now();
-            document.getElementById('fsPromoInput').value = '';
-            
-            // Очищаем и генерируем стартовое сообщение в чат
-            const msgContainer = document.getElementById('fsMessagesContainer');
-            msgContainer.innerHTML = `
-                <div class="fs-msg manager">
-                    <strong>${currentManager}:</strong><br>
-                    Привет! 👋 Спасибо, что выбираешь Jest Studio. Я буду заниматься разработкой твоего товара: <strong>${itemName}</strong>.<br><br>
-                    Напиши прямо сюда все свои пожелания (какой текст написать, в каких цветах выполнить, ссылки на примеры оформления, если есть). <br><br>
-                    Как только заполнишь требования, введи свою почту справа и нажми кнопку оплаты, чтобы я сразу зафиксировал твое ТЗ и взял его в работу!
-                </div>
-            `;
-            
-            // Показываем полноэкранный модал
-            document.getElementById('fullscreenChatModal').style.display = 'flex';
-            document.body.style.overflow = 'hidden'; // отключаем прокрутку сайта на фоне
-        }
-
-        function closeFullscreenChat() {
-            document.getElementById('fullscreenChatModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-
-        function handleFsKey(e) {
-            if (e.key === 'Enter') sendFsMessage();
-        }
-
-        function sendFsMessage() {
-            const input = document.getElementById('fsChatInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            const msgContainer = document.getElementById('fsMessagesContainer');
-            
-            // Сообщение пользователя
-            const userDiv = document.createElement('div');
-            userDiv.classList.add('fs-msg', 'user');
-            userDiv.innerText = text;
-            msgContainer.appendChild(userDiv);
-            
-            input.value = '';
-            msgContainer.scrollTop = msgContainer.scrollHeight;
-
-            // Ответ менеджера
-            setTimeout(() => {
-                const managerDiv = document.createElement('div');
-                managerDiv.classList.add('fs-msg', 'manager');
-                managerDiv.innerHTML = `<strong>${currentManager}:</strong><br>Понял тебя, требования отличные! Сохранил их в карточку заказа. Жду подтверждения оплаты из боковой панели, чтобы начать отрисовку.`;
-                msgContainer.appendChild(managerDiv);
-                msgContainer.scrollTop = msgContainer.scrollHeight;
-            }, 1200);
-        }
-
-        function applyFsPromo() {
-            const promo = document.getElementById('fsPromoInput').value.trim().toUpperCase();
-            let currentPrice = activeBasePrice;
-            
-            if (promo === VALID_PROMO) {
-                currentPrice = Math.round(activeBasePrice * 0.9);
-                document.getElementById('sideItemPrice').innerText = currentPrice + ' ₽ (Скидка 10%!)';
-            } else {
-                document.getElementById('sideItemPrice').innerText = activeBasePrice + ' ₽';
-            }
-            document.getElementById('fsFormAmount').value = currentPrice;
-        }
-
-        // --- 4. Логика Умного ИИ-Чата (Автоответчик техподдержки в углу) ---
-        function toggleChat() {
-            const chatWin = document.getElementById('chatWindow');
-            chatWin.style.display = (chatWin.style.display === 'flex') ? 'none' : 'flex';
-        }
-
-        function handleChatKey(e) {
-            if (e.key === 'Enter') sendChatMessage();
-        }
-
-        function sendChatMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (!text) return;
-
-            appendMessage(text, 'user');
-            input.value = '';
-
-            setTimeout(() => {
-                const aiReply = getAiResponse(text);
-                appendMessage(aiReply, 'ai');
-            }, 600);
-        }
-
-        function appendMessage(text, sender) {
-            const container = document.getElementById('chatMessages');
-            const msgDiv = document.createElement('div');
-            msgDiv.classList.add('msg', sender);
-            msgDiv.innerText = text;
-            container.appendChild(msgDiv);
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function getAiResponse(userText) {
-            const t = userText.toLowerCase();
-            if (t.includes('привет') || t.includes('здравствуй') || t.includes('ку')) {
-                return "Приветствую в нашем чате! Чем я могу помочь тебе сегодня?";
-            }
-            if (t.includes('цена') || t.includes('стоимость') || t.includes('товар') || t.includes('купить')) {
-                return "У нас отличные цены на дизайн: Аватарка — 250₽, Превью — 350₽, Обычная Шапка — 450₽, Оверлей — 500₽, Анимированная аватарка — 600₽, Анимированный оверлей — 1200₽. Нажмите кнопку «Купить» на карточке нужного товара!";
-            }
-            if (t.includes('промокод') || t.includes('скидк')) {
-                return "Прямо сейчас действует промокод START2026. Он дает скидку 10% на абсолютно любой товар из нашего каталога.";
-            }
-            if (t.includes('оплат') || t.includes('карт') || t.includes('сбп')) {
-                return "Мы поддерживаем все популярные методы оплаты в России: Систему Быстрых Платежей (СБП), любые банковские карты (МИР, Visa, Mastercard) и кошельки ЮMoney.";
-            }
-            return "Хороший вопрос! Наша техподдержка работает в режиме 24/7. Если у вас возникла трудность с открытием чата заказа, зафиксируйте тикет в форме внизу страницы.";
-        }
+        }, 1000);
     </script>
+
 </body>
 </html>

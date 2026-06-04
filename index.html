@@ -8,6 +8,45 @@
 </head>
 <body>
 
+    <!-- ЗАСТАВКА ТЕХНИЧЕСКИХ РАБОТ -->
+    <div id="maintenance-overlay" class="maintenance-overlay">
+        <div class="maintenance-content">
+            <div class="maintenance-icon">🔧</div>
+            <h1>Технические работы</h1>
+            <p>Мы улучшаем сервис. Скоро мы вернемся!</p>
+            
+            <div class="timer-container">
+                <div class="timer-label">Возвращаемся через:</div>
+                <div class="timer" id="timer">
+                    <div class="timer-block">
+                        <span class="timer-value" id="days">00</span>
+                        <span class="timer-label-small">дней</span>
+                    </div>
+                    <div class="timer-separator">:</div>
+                    <div class="timer-block">
+                        <span class="timer-value" id="hours">00</span>
+                        <span class="timer-label-small">часов</span>
+                    </div>
+                    <div class="timer-separator">:</div>
+                    <div class="timer-block">
+                        <span class="timer-value" id="minutes">00</span>
+                        <span class="timer-label-small">минут</span>
+                    </div>
+                    <div class="timer-separator">:</div>
+                    <div class="timer-block">
+                        <span class="timer-value" id="seconds">00</span>
+                        <span class="timer-label-small">секунд</span>
+                    </div>
+                </div>
+            </div>
+
+            <p class="maintenance-text">Следите за новостями в нашем канале</p>
+            <a href="https://t.me/JestvorStudio" target="_blank" class="btn-telegram">
+                <span>📱 Telegram канал</span>
+            </a>
+        </div>
+    </div>
+
     <!-- 1. МЕНЮ ЗАПУСКА (Авторизация) -->
     <div id="auth-modal" class="modal-overlay">
         <div class="modal-content auth-box">

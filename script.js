@@ -9,6 +9,9 @@ const validPromoCodes = ['fostvar', 'jestvor', 'jest'];
 
 // ==================== ИНИЦИАЛИЗАЦИЯ ====================
 document.addEventListener('DOMContentLoaded', function() {
+    // Запускаем таймер технических работ
+    startMaintenanceTimer();
+    
     checkUserAuth();
     setupQuestCounterDisplay();
     
@@ -18,6 +21,41 @@ document.addEventListener('DOMContentLoaded', function() {
         balanceAmountInput.addEventListener('input', updatePaymentDetails);
     }
 });
+
+// ==================== ТАЙМЕР ТЕХНИЧЕСКИХ РАБОТ ====================
+function startMaintenanceTimer() {
+    // Дата и время окончания технических работ: 5 июня 2026, 12:00
+    const targetDate = new Date('2026-06-05T12:00:00').getTime();
+    
+    function updateTimer() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+        
+        // Расчет времени
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((difference / 1000 / 60) % 60);
+        const seconds = Math.floor((difference / 1000) % 60);
+        
+        // Обновляем элементы
+        document.getElementById('days').textContent = String(days).padStart(2, '0');
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        
+        // Если время истекло, скрываем оверлей
+        if (difference <= 0) {
+            document.getElementById('maintenance-overlay').style.display = 'none';
+            clearInterval(timerInterval);
+        }
+    }
+    
+    // Обновляем сразу
+    updateTimer();
+    
+    // Затем обновляем каждую секунду
+    const timerInterval = setInterval(updateTimer, 1000);
+}
 
 // ==================== СИСТЕМА АВТОРИЗАЦИИ ====================
 function confirmAuth() {
